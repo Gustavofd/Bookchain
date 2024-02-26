@@ -65,7 +65,7 @@ contract Book {
     function rentBook(address _book, uint256 _days) external {
         require(bookData[_book].isPublished, "Livro não encontrado");
         require(balances[msg.sender] >= bookData[_book].rentalPrice, "Saldo de Bookcoins insuficiente");
-        require(rentedBooks[msg.sender] != _book, "Livro já alugado pelo mesmo leitor");
+        require(rentedBooks[msg.sender] != _book, "Livro ja alugado pelo mesmo leitor");
 
         Rental[] storage bookRentals = rentals[_book];
         bookRentals.push(Rental(msg.sender, block.timestamp, block.timestamp + (_days * 1 days)));
