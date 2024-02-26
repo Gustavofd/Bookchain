@@ -129,7 +129,7 @@ contract Book {
             }
         }
     
-        // Redimensionar o array para remover os espaços vazios
+        // Redimensionar o array para remover os espacos vazios
         address[] memory finalAvailableBooks = new address[](count);
         for (uint256 i = 0; i < count; i++) {
             finalAvailableBooks[i] = availableBooks[i];
