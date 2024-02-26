@@ -41,6 +41,12 @@ contract Book {
     // Evento emitido quando o histórico de aluguéis é consultado
     event RentalHistoryChecked(address indexed renter, address indexed book, uint256 startDate, uint256 endDate);
 
+    // Evento emitido quando o histórico de aluguéis é consultado
+    event RentalHistoryChecked(address indexed renter, address indexed book, uint256 startDate, uint256 endDate);
+
+    // Evento emitido quando a lista de livros disponíveis é consultada
+    event AvailableBooksChecked(address indexed renter, address[] books);
+
     // Função para publicar um livro
     function publishBook(address _book, string memory _title, string memory _content, uint256 _rentalPrice) external {
         require(!bookData[_book].isPublished, "Livro já foi publicado");
