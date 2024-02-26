@@ -101,4 +101,40 @@ contract Book {
             emit RentalHistoryChecked(msg.sender, rentedBooks[msg.sender], rentalHistory[i].startDate, rentalHistory[i].endDate);
         }
     }
+
+    // Função para verificar se o leitor tem permissão para ler o livro
+    function canReadBook(address _reader, address _book) public view returns (bool) {
+        Rental[] storage rentalHistory = rentals[_book];
+        for (uint256 i = 0; i < rentalHistory.length; i++) {
+            if (rentalHistory[i].renter == _reader) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Função para listar os livros disponíveis para o leitor
+    function checkAvailableBooks() external view returns (address[] memory) {
+        address[] memory availableBooks = new address[](rentedBooks[msg.sender]);
+        uint256 count = 0;
+    
+        for (uint256 i = 0; i < rentedBooks[msg.sender].length; i++) {
+            address bookAddress = rentedBooks[msg.sender][i];
+            Rental[] storage bookRentals = rentals[bookAddress];
+            uint256 rentalsCount = bookRentals.length;
+    
+            if (rentalsCount > 0 && bookRentals[rentalsCount - 1].endDate > block.timestamp) {
+                availableBooks[count] = bookAddress;
+                count++;
+            }
+        }
+    
+        // Redimensionar o array para remover os espaços vazios
+        address[] memory finalAvailableBooks = new address[](count);
+        for (uint256 i = 0; i < count; i++) {
+            finalAvailableBooks[i] = availableBooks[i];
+        }
+    
+        return finalAvailableBooks;
+    }
 }
