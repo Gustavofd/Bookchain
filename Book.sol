@@ -63,7 +63,7 @@ contract Book {
 
     // Func para alugar um livro
     function rentBook(address _book, uint256 _days) external {
-        require(bookData[_book].isPublished, "Livro não encontrado");
+        require(bookData[_book].isPublished, "Livro nao encontrado");
         require(balances[msg.sender] >= bookData[_book].rentalPrice, "Saldo de Bookcoins insuficiente");
         require(rentedBooks[msg.sender] != _book, "Livro ja alugado pelo mesmo leitor");
 
