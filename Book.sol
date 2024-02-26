@@ -14,42 +14,42 @@ contract Book {
         bool isPublished;
     }
 
-    // Mapeamento entre o endereço do livro e as informações de aluguel
+    // Mapeamento entre o endereço do livro e as informacoes de aluguel
     mapping(address => Rental[]) public rentals;
 
-    // Mapeamento entre o endereço do livro e os dados do livro
+    // Mapeamento entre o endereco do livro e os dados do livro
     mapping(address => BookData) public bookData;
 
-    // Mapeamento entre o endereço do leitor e o livro alugado
+    // Mapeamento entre o endereco do leitor e o livro alugado
     mapping(address => address) public rentedBooks;
 
-    // Mapeamento entre o endereço do leitor e seu saldo de Bookcoins
+    // Mapeamento entre o endereco do leitor e seu saldo de Bookcoins
     mapping(address => uint256) public balances;
 
-    // Evento emitido quando um livro é publicado
+    // Evento emitido quando um livro eh publicado
     event BookPublished(address indexed book, string title, string content, uint256 rentalPrice);
 
-    // Evento emitido quando um livro é alugado
+    // Evento emitido quando um livro eh alugado
     event BookRented(address indexed book, address indexed renter, uint256 startDate, uint256 endDate);
 
-    // Evento emitido quando um pagamento de aluguel é realizado em Bookcoins
+    // Evento emitido quando um pagamento de aluguel eh realizado em Bookcoins
     event RentPayment(address indexed book, address indexed renter, address indexed author, uint256 amount);
 
-    // Evento emitido quando o saldo do autor é consultado
+    // Evento emitido quando o saldo do autor eh consultado
     event BalanceChecked(address indexed author, uint256 balance);
 
-    // Evento emitido quando o histórico de aluguéis é consultado
+    // Evento emitido quando o histórico de alugueis eh consultado
     event RentalHistoryChecked(address indexed renter, address indexed book, uint256 startDate, uint256 endDate);
 
-    // Evento emitido quando o histórico de aluguéis é consultado
+    // Evento emitido quando o histórico de alugueis eh consultado
     event RentalHistoryChecked(address indexed renter, address indexed book, uint256 startDate, uint256 endDate);
 
-    // Evento emitido quando a lista de livros disponíveis é consultada
+    // Evento emitido quando a lista de livros disponiveis eh consultada
     event AvailableBooksChecked(address indexed renter, address[] books);
 
-    // Função para publicar um livro
+    // Func para publicar um livro
     function publishBook(address _book, string memory _title, string memory _content, uint256 _rentalPrice) external {
-        require(!bookData[_book].isPublished, "Livro já foi publicado");
+        require(!bookData[_book].isPublished, "Livro ja foi publicado");
 
         bookData[_book] = BookData({
             title: _title,
@@ -61,7 +61,7 @@ contract Book {
         emit BookPublished(_book, _title, _content, _rentalPrice);
     }
 
-    // Função para alugar um livro
+    // Func para alugar um livro
     function rentBook(address _book, uint256 _days) external {
         require(bookData[_book].isPublished, "Livro não encontrado");
         require(balances[msg.sender] >= bookData[_book].rentalPrice, "Saldo de Bookcoins insuficiente");
@@ -72,7 +72,7 @@ contract Book {
 
         rentedBooks[msg.sender] = _book;
 
-        // Cálculo dos valores a serem pagos
+        // Calculo dos valores a serem pagos
         uint256 rentalAmount = bookData[_book].rentalPrice;
         uint256 networkFee = rentalAmount * 3 / 100;
         uint256 authorAmount = rentalAmount - networkFee;
@@ -88,13 +88,13 @@ contract Book {
         emit RentPayment(_book, msg.sender, address(this), networkFee);
     }
 
-    // Função para o autor consultar seu saldo de Bookcoins
+    // Func para o autor consultar seu saldo de Bookcoins
     function checkBalance() external {
         address author = address(this);
         emit BalanceChecked(author, balances[author]);
     }
 
-    // Função para o leitor consultar seu histórico de aluguel
+    // Func para o leitor consultar seu historico de aluguel
     function checkRentalHistory() external {
         Rental[] storage rentalHistory = rentals[rentedBooks[msg.sender]];
         for (uint256 i = 0; i < rentalHistory.length; i++) {
@@ -102,7 +102,7 @@ contract Book {
         }
     }
 
-    // Função para verificar se o leitor tem permissão para ler o livro
+    // Func para verificar se o leitor tem permissao para ler o livro
     function canReadBook(address _reader, address _book) public view returns (bool) {
         Rental[] storage rentalHistory = rentals[_book];
         for (uint256 i = 0; i < rentalHistory.length; i++) {
@@ -113,7 +113,7 @@ contract Book {
         return false;
     }
 
-    // Função para listar os livros disponíveis para o leitor
+    // Func para listar os livros disponiveis para o leitor
     function checkAvailableBooks() external view returns (address[] memory) {
         address[] memory availableBooks = new address[](rentedBooks[msg.sender]);
         uint256 count = 0;
