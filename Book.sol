@@ -41,9 +41,6 @@ contract Book {
     // Evento emitido quando o histórico de alugueis eh consultado
     event RentalHistoryChecked(address indexed renter, address indexed book, uint256 startDate, uint256 endDate);
 
-    // Evento emitido quando o histórico de alugueis eh consultado
-    event RentalHistoryChecked(address indexed renter, address indexed book, uint256 startDate, uint256 endDate);
-
     // Evento emitido quando a lista de livros disponiveis eh consultada
     event AvailableBooksChecked(address indexed renter, address[] books);
 
