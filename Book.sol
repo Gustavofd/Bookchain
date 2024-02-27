@@ -114,7 +114,7 @@ contract Book {
     }
 
     // Func para listar os livros disponiveis para o leitor
-    function checkAvailableBooks() external view returns (address[] memory) {
+    /*function checkAvailableBooks() external view returns (address[] memory) {
         address[] memory availableBooks = new address[](rentedBooks[msg.sender]);
         uint256 count = 0;
     
@@ -136,5 +136,5 @@ contract Book {
         }
     
         return finalAvailableBooks;
-    }
+    }*/
 }
