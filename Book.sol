@@ -1,5 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
+/**
+ * @title Bookchain
+ * @dev Manage a virtual distributed book store.
+ */
 contract Book {
     struct Rental {
         address renter;
@@ -110,28 +115,8 @@ contract Book {
         return false;
     }
 
-    // Func para listar os livros disponiveis para o leitor
-    /*function checkAvailableBooks() external view returns (address[] memory) {
-        address[] memory availableBooks = new address[](rentedBooks[msg.sender]);
-        uint256 count = 0;
-    
-        for (uint256 i = 0; i < rentedBooks[msg.sender].length; i++) {
-            address bookAddress = rentedBooks[msg.sender][i];
-            Rental[] storage bookRentals = rentals[bookAddress];
-            uint256 rentalsCount = bookRentals.length;
-    
-            if (rentalsCount > 0 && bookRentals[rentalsCount - 1].endDate > block.timestamp) {
-                availableBooks[count] = bookAddress;
-                count++;
-            }
-        }
-    
-        // Redimensionar o array para remover os espacos vazios
-        address[] memory finalAvailableBooks = new address[](count);
-        for (uint256 i = 0; i < count; i++) {
-            finalAvailableBooks[i] = availableBooks[i];
-        }
-    
-        return finalAvailableBooks;
-    }*/
+    // TODO: Func para verificar os livros disponiveis para aluguel
+
+    // TODO: Func para verificar os livros disponiveis para um usuario
+
 }
