@@ -28,6 +28,9 @@ contract Book {
     // Mapeamento entre o endereco do leitor e o livro alugado
     mapping(address => address) public rentedBooks;
 
+    // Array para armazenar os endereços dos livros publicados
+    address[] public publishedBooks;
+
     // Mapeamento entre o endereco do leitor e seu saldo de Bookcoins
     mapping(address => uint256) public balances;
 
@@ -59,6 +62,9 @@ contract Book {
             rentalPrice: _rentalPrice,
             isPublished: true
         });
+
+        // Add the book to the publishedBooks array
+        publishedBooks.push(_book);
 
         emit BookPublished(_book, _title, _content, _rentalPrice);
     }
@@ -115,8 +121,59 @@ contract Book {
         return false;
     }
 
-    // TODO: Func para verificar os livros disponiveis para aluguel
+    // Func para obter os livros disponiveis para aluguel
+    function getAvailableBooks() external view returns (address[] memory) {
+        uint256 availableBooksCount = 0;
+        address[] memory availableBooks = new address[](publishedBooks.length);
 
-    // TODO: Func para verificar os livros disponiveis para um usuario
+        for (uint256 i = 0; i < publishedBooks.length; i++) {
+            address bookAddress = publishedBooks[i];
+            if (bookData[bookAddress].isPublished) {
+                availableBooks[availableBooksCount] = bookAddress;
+                availableBooksCount++;
+            }
+        }
+
+        // Resize the array to remove empty slots
+        assembly {
+            mstore(availableBooks, availableBooksCount)
+        }
+
+        return availableBooks;
+    }
+
+    // Func para obter os livros disponiveis para um usuario
+    function getAvailableBooksForUser() external view returns (address[] memory) {
+        uint256 availableBooksCount = 0;
+        address[] memory availableBooks = new address[](publishedBooks.length);
+
+        for (uint256 i = 0; i < publishedBooks.length; i++) {
+            address book = publishedBooks[i];
+
+            // Verificar se o livro está publicado
+            if (bookData[book].isPublished) {
+                availableBooks[availableBooksCount] = book;
+                availableBooksCount++;
+            } else if (rentedBooks[book] == msg.sender) {
+                // Verificar se o usuário alugou o livro e o aluguel ainda não expirou
+                Rental[] storage bookRentals = rentals[book];
+                for (uint256 j = 0; j < bookRentals.length; j++) {
+                    if (bookRentals[j].renter == msg.sender && block.timestamp < bookRentals[j].endDate) {
+                        // O usuário alugou o livro e o aluguel ainda está ativo
+                        availableBooks[availableBooksCount] = book;
+                        availableBooksCount++;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Resize the array to remove empty slots
+        assembly {
+            mstore(availableBooks, availableBooksCount)
+        }
+
+        return availableBooks;
+    }
 
 }
